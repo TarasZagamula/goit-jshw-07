@@ -27,20 +27,24 @@ function createGallery(gryItems) {
 
 function onImgClick(evt) {
   evt.preventDefault();
-    if (evt.target.classList.contains(`gallery__image`)) {
-        const instance = basicLightbox.create(`
+  if (evt.target.nodeName === "IMG") {
+    const modalWindow = basicLightbox.create(`
         <img src="${evt.target.dataset.source}" 
         width="800"
-        height="600">`)
-      instance.show();
-      window.addEventListener(`keydown`, deletedModalWindow);
-    }
+        height="600">`,
+      {
+        onShow: () => {window.addEventListener(`keydown`, onEscDown)},
+        onClose: () => {window.removeEventListener(`keydown`, onEscDown)}
+      })
+    modalWindow.show();
+  }
+
 };
 
-function deletedModalWindow(evt) {
+function onEscDown(evt) {
   let modal = document.querySelector(`.basicLightbox`)
   if (evt.code === `Escape`) {
-    modal.remove()
+    modal.remove();
   }
 };
-// console.log(newGallery)
+
